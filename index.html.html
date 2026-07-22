@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hong Kong + Corea — Itinerario di viaggio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#11151c;
+    --ink-2:#171c25;
+    --cream:#f6f1e6;
+    --cream-dim:#e8e0cd;
+    --line:#33404f;
+    --text:#e9e4d6;
+    --text-dim:#9aa3ae;
+    --hk:#ff5d73;
+    --jeju:#e08e2b;
+    --busan:#2f8fd6;
+    --gj:#b6903a;
+    --seoul:#8a5fc0;
+    --info:#59c2a6;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- layout shell ---------- */
+  .shell{display:flex;min-height:100vh;}
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    width:280px;flex-shrink:0;
+    background:var(--ink-2);
+    border-right:1px solid var(--line);
+    padding:24px 0 40px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{padding:0 22px 18px;border-bottom:1px solid var(--line);margin-bottom:10px;}
+  .brand .stamp{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;
+    letter-spacing:.12em;color:var(--info);border:1px solid var(--info);
+    border-radius:20px;padding:3px 9px;text-transform:uppercase;margin-bottom:10px;
+  }
+  .brand h1{font-size:22px;margin:0 0 4px;line-height:1.15;color:var(--cream);}
+  .brand p{margin:0;font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+
+  .navgroup{margin-top:6px;}
+  .navgroup-label{
+    padding:14px 22px 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+  }
+  .region-block{margin-bottom:2px;}
+  .region-head{
+    display:flex;align-items:center;gap:9px;padding:9px 22px;cursor:default;
+    font-size:13px;color:var(--cream);font-weight:600;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .daylink{
+    display:flex;align-items:baseline;gap:10px;width:100%;text-align:left;
+    background:none;border:none;color:var(--text-dim);cursor:pointer;
+    padding:7px 22px 7px 39px;font-size:13px;font-family:'Space Grotesk',sans-serif;
+    border-left:2px solid transparent;transition:.15s;
+  }
+  .daylink:hover{color:var(--text);background:rgba(255,255,255,.03);}
+  .daylink.active{color:var(--cream);border-left-color:var(--accent,var(--info));background:rgba(255,255,255,.05);font-weight:600;}
+  .daylink .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);}
+  .infolink{
+    display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;
+    color:var(--text-dim);cursor:pointer;padding:9px 22px;font-size:13px;font-family:'Space Grotesk',sans-serif;
+    border-left:2px solid transparent;
+  }
+  .infolink:hover{color:var(--text);}
+  .infolink.active{color:var(--cream);border-left-color:var(--info);background:rgba(255,255,255,.05);font-weight:600;}
+
+  .menu-toggle{display:none;}
+
+  /* ---------- main ---------- */
+  main{flex:1;min-width:0;background:var(--cream);color:#20242c;}
+  .page{max-width:920px;margin:0 auto;padding:56px 40px 100px;}
+
+  /* ticket header */
+  .ticket{
+    position:relative;border-radius:18px;padding:28px 30px;color:#fff;
+    background:linear-gradient(135deg,var(--accent) 0%, rgba(0,0,0,.25) 130%);
+    overflow:hidden;margin-bottom:34px;
+  }
+  .ticket::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    border-radius:50%;background:rgba(255,255,255,.10);
+  }
+  .ticket-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;position:relative;z-index:1;flex-wrap:wrap;}
+  .ticket-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:8px;}
+  .ticket h2{font-size:32px;margin:0 0 6px;line-height:1.1;}
+  .ticket .sub{font-size:14.5px;opacity:.92;}
+  .ticket-meta{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;line-height:1.7;opacity:.95;white-space:nowrap;}
+  .ticket-meta b{font-size:13px;}
+  .perf{border-top:1px dashed rgba(255,255,255,.45);margin-top:20px;padding-top:14px;position:relative;z-index:1;
+    display:flex;gap:22px;flex-wrap:wrap;font-size:12.5px;}
+  .perf span b{display:block;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+  .perf span{opacity:.95;}
+
+  /* section blocks */
+  .block-title{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7a7263;
+    font-family:'JetBrains Mono',monospace;margin:38px 0 14px;display:flex;align-items:center;gap:10px;
+  }
+  .block-title::after{content:"";flex:1;height:1px;background:#d8cfb8;}
+
+  /* timeline */
+  .timeline{border-left:2px solid #d8cfb8;margin-left:6px;padding-left:22px;}
+  .tl-item{position:relative;padding-bottom:14px;display:flex;gap:14px;align-items:flex-start;}
+  .tl-item::before{content:"";position:absolute;left:-28px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);}
+  .tl-time{font-family:'JetBrains Mono',monospace;font-size:13px;color:#20242c;font-weight:600;
+    flex-shrink:0;width:52px;padding-top:1px;}
+  .tl-text{font-size:14.5px;line-height:1.45;padding:7px 12px;border-radius:9px;flex:1;}
+  .tl-item.visit .tl-text{background:#fffdf8;border:1px solid #e3dbc6;}
+  .tl-item.meal .tl-text{background:#fdf1e3;border:1px solid #eeddbf;}
+  .tl-item.meal .tl-text::before{content:"🍜 ";}
+  .tl-item.logistics .tl-text{background:transparent;border:1px dashed #cfc6ac;color:#7a7263;font-style:italic;font-size:13.3px;}
+  .tl-item.transfer{opacity:.92;}
+  .tl-item.transfer .tl-text{background:none;border:none;padding:2px 0 2px 2px;color:#6d6656;font-size:13px;
+    font-family:'JetBrains Mono',monospace;}
+  .tl-item.transfer .tl-text::before{content:"→ ";color:var(--accent);font-weight:700;}
+  .tl-item.transfer .tl-time{color:#8a8271;font-weight:500;}
+  .tl-item.transfer::before{background:transparent;border:2px solid var(--accent);}
+
+  /* place cards */
+  .places{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;}
+  .place-card{
+    background:#fffdf8;border:1px solid #e3dbc6;border-radius:14px;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .place-img{width:100%;height:130px;object-fit:cover;display:block;background:#e3dbc6;}
+  .place-img-ph{
+    width:100%;height:130px;display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:15px;color:#fff;text-align:center;padding:10px;
+    background:linear-gradient(135deg,var(--accent),#2a2f38);
+  }
+  .place-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;}
+  .place-body h4{margin:0 0 6px;font-size:16px;font-family:'Fraunces',serif;font-weight:600;}
+  .place-body p{margin:0 0 10px;font-size:13.3px;line-height:1.55;color:#4a4638;flex:1;}
+  .tip{
+    font-size:12.3px;line-height:1.5;background:#f1ead8;border-radius:8px;padding:8px 10px;
+    color:#5b4f36;display:flex;gap:7px;
+  }
+  .tip b{flex-shrink:0;color:var(--accent);}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px;font-size:12px;color:#7a7263;font-family:'JetBrains Mono',monospace;}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--accent);}
+  .legend i.meal-i{background:#e0a94a;border-radius:3px;}
+  .legend i.transfer-i{background:none;border:2px solid var(--accent);}
+  .legend i.logistics-i{background:none;border:1px dashed #8a8271;}
+
+  .foot-nav{display:flex;justify-content:space-between;margin-top:48px;gap:14px;}
+  .foot-btn{
+    flex:1;background:#20242c;color:#f6f1e6;border:none;border-radius:12px;padding:16px 18px;
+    cursor:pointer;text-align:left;font-family:'Space Grotesk',sans-serif;transition:.15s;
+  }
+  .foot-btn:hover{background:#33404f;}
+  .foot-btn.right{text-align:right;}
+  .foot-btn .lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-bottom:4px;}
+  .foot-btn .nm{font-size:14.5px;}
+  .foot-btn:disabled{opacity:.3;cursor:default;}
+
+  /* info page */
+  .info-hero{background:linear-gradient(135deg,var(--info),#20242c);color:#fff;border-radius:18px;padding:30px;margin-bottom:10px;}
+  .info-hero .ticket-eyebrow{color:#fff;}
+  .info-hero h2{font-size:30px;margin:0 0 8px;}
+  .info-hero p{margin:0;font-size:14.5px;max-width:60ch;opacity:.95;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px;}
+  @media(max-width:720px){.info-grid{grid-template-columns:1fr;}}
+  .info-card{background:#fffdf8;border:1px solid #e3dbc6;border-radius:14px;padding:18px 20px;}
+  .info-card h3{margin:0 0 10px;font-size:16px;font-family:'Fraunces',serif;display:flex;align-items:center;gap:8px;}
+  .info-card ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.65;color:#3d3a30;}
+  .info-card li{margin-bottom:6px;}
+  .info-card p{font-size:13.5px;line-height:1.65;color:#3d3a30;margin:0 0 8px;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#eee6d0;color:#5b4f36;border-radius:6px;padding:2px 7px;margin-right:4px;}
+
+  .hidden{display:none !important;}
+
+  /* mobile */
+  @media(max-width:900px){
+    .sidebar{
+      position:fixed;left:0;top:0;z-index:40;transform:translateX(-100%);transition:.25s;
+      box-shadow:10px 0 30px rgba(0,0,0,.4);width:270px;
+    }
+    .sidebar.open{transform:translateX(0);}
+    .menu-toggle{
+      display:flex;align-items:center;gap:8px;position:fixed;top:16px;left:16px;z-index:50;
+      background:var(--ink-2);color:var(--cream);border:1px solid var(--line);border-radius:10px;
+      padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;
+    }
+    .page{padding:90px 20px 80px;}
+    .ticket h2{font-size:26px;}
+    .ticket-row{flex-direction:column;}
+    .ticket-meta{text-align:left;}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30;}
+    .overlay.show{display:block;}
+  }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">☰ &nbsp;Itinerario</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="stamp">✈ boarding pass</span>
+      <h1>Hong Kong<br>+ Corea del Sud</h1>
+      <p>15 — 30 agosto 2026 · 16 giorni</p>
+    </div>
+    <div id="navContent"></div>
+  </nav>
+
+  <main>
+    <div class="page" id="page"></div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const REGIONS = {
+  info:   { label:"Prima di partire", color:"var(--info)" },
+  hk:     { label:"Hong Kong",  color:"var(--hk)" },
+  jeju:   { label:"Isola di Jeju", color:"var(--jeju)" },
+  busan:  { label:"Busan", color:"var(--busan)" },
+  gj:     { label:"Gyeongju", color:"var(--gj)" },
+  seoul:  { label:"Seoul", color:"var(--seoul)" },
+};
+
+const DAYS = [
+{
+  id:1, region:"hk", date:"Sab 15 Agosto", city:"Hong Kong", hotel:"Hotel a Hong Kong (da confermare)",
+  flight:"Volo Napoli → Hong Kong (Lufthansa)",
+  note:"Sezione in aggiornamento: appena mi invierai il file con i dettagli di Hong Kong, la completo con lo stesso livello di dettaglio (orari, spostamenti, luoghi) delle altre tappe.",
+  schedule:[], places:[]
+},
+{
+  id:2, region:"hk", date:"Dom 16 Agosto", city:"Hong Kong", hotel:"Hotel a Hong Kong (da confermare)",
+  note:"Sezione in aggiornamento: in attesa del tuo file con l'itinerario di Hong Kong.",
+  schedule:[], places:[]
+},
+{
+  id:3, region:"hk", date:"Lun 17 Agosto", city:"Hong Kong", hotel:"Hotel a Hong Kong (da confermare)",
+  note:"Sezione in aggiornamento: in attesa del tuo file con l'itinerario di Hong Kong.",
+  schedule:[], places:[]
+},
+
+{
+  id:4, region:"jeju", date:"Mar 18 Agosto", city:"Isola di Jeju", hotel:"Co-op City Hotel Seongsan",
+  flight:"Volo Hong Kong → Jeju",
+  schedule:[
+    {time:"06:30", text:"Arrivo Jeju", type:"logistics"},
+    {time:"07:30", text:"Ritiro macchina", type:"logistics"},
+    {time:"08:00", text:"Partenza per Gimnyeong Beach [1h]", type:"transfer"},
+    {time:"09:00", text:"Gimnyeong Beach", type:"visit"},
+    {time:"13:00", text:"Pranzo: Ory Fishmarket", type:"meal"},
+    {time:"14:00", text:"Mongtan Jeju Branch - 83 Dongbok-ro, Gujwa-eup, 특별자치도, Cheju, Jeju-do, Corea del Sud", type:"visit"},
+    {time:"14:30", text:"Partenza per Gimnyeong Maze Park [5min]", type:"transfer"},
+    {time:"15:00", text:"Gimnyeong Maze Park", type:"visit"},
+    {time:"15:30", text:"Partenza per Manjanggul Lava Tube [5min]", type:"transfer"},
+    {time:"16:00", text:"Manjanggul Lava Tube", type:"visit"},
+    {time:"16:30", text:"Partenza per Snoopy Garden [30min]", type:"transfer"},
+    {time:"17:00", text:"Snoopy Garden", type:"visit"},
+    {time:"18:00", text:"Partenza per Seopjikoji [30min]", type:"transfer"},
+    {time:"18:30", text:"Seopjikoji", type:"visit"},
+    {time:"19:00", text:"Aqua Planet Jeju", type:"visit"},
+    {time:"20:00", text:"Cena: Geumdot Seongsan Black Pork", type:"meal"}
+  ],
+  places:[
+    {n:"Gimnyeong Beach", d:"Spiaggia dalle acque turchesi e poco profonde sulla costa nord-est di Jeju, meno affollata delle spiagge del sud.", tip:"Ottima per una sosta rilassata appena atterrati; portate scarpe da scoglio."},
+    {n:"Manjanggul Lava Tube", d:"Uno dei tubi di lava più lunghi al mondo (quasi 7 km, un tratto di 1 km visitabile), formatosi da eruzioni vulcaniche migliaia di anni fa. Patrimonio UNESCO.", tip:"Dentro fa fresco tutto l'anno (circa 11-21°C): portate una giacca leggera."},
+    {n:"Snoopy Garden", d:"Parco a tema dedicato ai Peanuts, con giardini curati e casette a grandezza naturale ispirate al fumetto — molto amato dai coreani, curioso anche per gli adulti.", tip:"Ingresso a pagamento ma piccolo e godibile in un'ora."},
+    {n:"Aqua Planet Jeju", d:"Uno dei più grandi acquari della Corea, con squali balena e spettacoli di delfini.", tip:"Se siete stanchi dal volo, è un'attività 'facile' da fare in serata al chiuso."}
+  ]
+},
+{
+  id:5, region:"jeju", date:"Mer 19 Agosto", city:"Isola di Jeju", hotel:"Hotel a Seogwipo",
+  schedule:[
+    {time:"04:30", text:"Sveglia", type:"logistics"},
+    {time:"05:30", text:"Seongsan Ilchulbong (Peak)", type:"visit"},
+    {time:"06:30", text:"Partenza per Jeju Folk Village [29min]", type:"transfer"},
+    {time:"07:30", text:"Jeju Folk Village", type:"visit"},
+    {time:"08:00", text:"Partenza per Soesokkak [35min]", type:"transfer"},
+    {time:"09:00", text:"Colazione: Cafe Hello Sokkak", type:"meal"},
+    {time:"09:30", text:"Soesokkak", type:"visit"},
+    {time:"10:00", text:"Canoa", type:"visit"},
+    {time:"12:00", text:"Partenza per Seogwipo Maeil Olle Market (15min)", type:"transfer"},
+    {time:"12:30", text:"Pranzo: Seogwipo Maeil Olle Market", type:"meal"},
+    {time:"14:00", text:"Cascata Jeongbang", type:"visit"},
+    {time:"15:00", text:"Partenza per Gimnyeong Maze Park [1h]", type:"transfer"},
+    {time:"16:00", text:"Songaksan Mountain Trail", type:"visit"},
+    {time:"17:00", text:"Partenza per Sanbangsan Bomunsa Temple", type:"transfer"},
+    {time:"17:30", text:"Sanbangsan Bomunsa Temple", type:"visit"},
+    {time:"18:30", text:"Yongmeori Coast", type:"visit"},
+    {time:"19:30", text:"Cena", type:"meal"}
+  ],
+  places:[
+    {n:"Seongsan Ilchulbong", d:"Cratere vulcanico tufaceo alto 182 m sulla costa orientale, Patrimonio UNESCO e forse il luogo più iconico di Jeju: il nome significa 'picco del sole nascente'.", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Seongsan%20Ilchulbong%2C%20Jeju%20Island.jpg?width=600", tip:"Si sale in circa 30-40 minuti; per l'alba l'ingresso apre prestissimo, controllate l'orario stagionale."},
+    {n:"Soesokkak", d:"Un estuario dove un fiume incontra il mare tra pareti rocciose e pinete: si esplora in tradizionale canoa/gommone (teu) o kayak.", tip:"Prenotate la canoa con anticipo nei weekend estivi, va a ruba."},
+    {n:"Cascata Jeongbang", d:"Una delle poche cascate al mondo che si getta direttamente in mare. Alta circa 23 metri.", tip:"Accessibile con una breve camminata dal parcheggio; bello anche solo il tratto di costa lì intorno."},
+    {n:"Sanbangsan & Bomunsa Temple", d:"Montagna-cupola di roccia lavica con una grotta-tempio buddista (Sanbanggulsa) scavata nella parete, con vista sulla costa sud.", tip:"Ingresso a pagamento; qualche gradino ma percorso breve."}
+  ]
+},
+{
+  id:6, region:"jeju", date:"Gio 20 Agosto", city:"Isola di Jeju → Busan", hotel:"Busan H-AVENUE Hotel Seomyeon",
+  flight:"Volo Jeju → Busan, ore 19:15",
+  schedule:[
+    {time:"07:30", text:"Sveglia", type:"logistics"},
+    {time:"08:30", text:"Partenza per Osulloc Tea Museum [15min]", type:"transfer"},
+    {time:"09:00", text:"Osulloc Tea Museum", type:"visit"},
+    {time:"10:30", text:"Partenza per Spirited Garden [6min]", type:"transfer"},
+    {time:"11:00", text:"Spirited Garden", type:"visit"},
+    {time:"12:00", text:"Partenza per Hallim Park [13min]", type:"transfer"},
+    {time:"12:30", text:"Hallim Park", type:"visit"},
+    {time:"13:30", text:"Partenza per Hallim Park [15min]", type:"transfer"},
+    {time:"14:00", text:"Aewol Cafe Street", type:"visit"},
+    {time:"14:30", text:"도토리 제주점 - 24-9 Aewol-ro 1-gil, 특별자치도, Cheju, Jeju-do, Corea del Sud", type:"visit"},
+    {time:"15:00", text:"Partenza per Ihoteu Beach [30min]", type:"transfer"},
+    {time:"15:30", text:"Ihoteu Beach /Jeju City", type:"visit"},
+    {time:"17:30", text:"Partenza per Aereoporto", type:"transfer"},
+    {time:"18:00", text:"Aereoporto", type:"transfer"},
+    {time:"19:00", text:"Aereo per Busan 19.15", type:"transfer"},
+    {time:"21:00", text:"Cena", type:"meal"}
+  ],
+  places:[
+    {n:"Osulloc Tea Museum", d:"Museo e caffetteria immersi nelle piantagioni di tè verde di Jeju, marchio coreano famoso anche fuori dalla Corea.", tip:"Provate il gelato o il tiramisù al tè verde nel caffè con vista sui filari."},
+    {n:"Hallim Park", d:"Giardino botanico che unisce grotte laviche, una foresta di palme subtropicali e un giardino di bonsai in un unico grande parco.", tip:"Si cammina parecchio: calcolate almeno 1h30 per il giro completo."}
+  ]
+},
+{
+  id:7, region:"busan", date:"Ven 21 Agosto", city:"Busan", hotel:"Busan H-AVENUE Hotel Seomyeon",
+  schedule:[
+    {time:"08:00", text:"Sveglia", type:"logistics"},
+    {time:"09:00", text:"Gamcheon Culture Village", type:"visit"},
+    {time:"10:30", text:"Partenza per Bay Station [11min]", type:"transfer"},
+    {time:"11:00", text:"Songdo Bay Station (cabinovia)", type:"visit"},
+    {time:"11:30", text:"Songdo Yonggung Suspension Bridge", type:"visit"},
+    {time:"12:00", text:"Songdo Sky Park", type:"visit"},
+    {time:"13:00", text:"Partenza per Jagalchi Market [17min]", type:"transfer"},
+    {time:"13:30", text:"Pranzo: Jagalchi Market", type:"meal"},
+    {time:"14:30", text:"BIFF Square (street food)", type:"visit"},
+    {time:"15:00", text:"Gukje Market", type:"visit"},
+    {time:"16:00", text:"Bosu Book Street", type:"visit"},
+    {time:"17:30", text:"Partenza per Yongdusan Park e Torre di Busan [10min]", type:"transfer"},
+    {time:"18:00", text:"Yongdusan Park e Torre di Busan", type:"visit"},
+    {time:"19:30", text:"Cena: Gwangalli beach (cena vista ponte)", type:"meal"}
+  ],
+  places:[
+    {n:"Gamcheon Culture Village", d:"Ex quartiere di rifugiati della guerra di Corea, trasformato dal 2009 in un villaggio d'arte di case pastello, scalinate e murales — soprannominato la 'Machu Picchu' o la 'Santorini' di Busan.", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Gamcheon%20Cultural%20Village%2C%20Busan.jpg?width=600", tip:"Ritirate la mappa/timbro all'ingresso al Centro Informazioni: è un piccolo gioco a caccia dei punti panoramici."},
+    {n:"Jagalchi Market", d:"Il mercato ittico più grande della Corea, sul lungomare: pesce vivo, frutti di mare alla griglia, un pezzo autentico di vita busanita.", tip:"Al piano superiore ci sono ristoranti che cucinano al momento quello che comprate al banco sotto."},
+    {n:"Yongdusan Park e Torre di Busan", d:"Collina nel cuore della città con giardini e la Torre di Busan, punto panoramico storico sul porto.", tip:"Si raggiunge anche con una scala mobile all'aperto dal quartiere di Nampo-dong."},
+    {n:"Gwangalli Beach & Diamond Bridge", d:"Spiaggia urbana con vista sul Gwangan Bridge (Diamond Bridge), illuminato la sera da giochi di luce colorati.", tip:"I ristoranti col lato mare fanno pagare un sovrapprezzo per la vista: valutate se vale la pena o mangiare più indietro."}
+  ]
+},
+{
+  id:8, region:"busan", date:"Sab 22 Agosto", city:"Busan", hotel:"Busan H-AVENUE Hotel Seomyeon",
+  schedule:[
+    {time:"08:30", text:"Sveglia", type:"logistics"},
+    {time:"09:30", text:"Oryukdo Skywalk", type:"visit"},
+    {time:"10:30", text:"Igidae Coastal Trail", type:"visit"},
+    {time:"13:30", text:"Gwangalli Beach", type:"visit"},
+    {time:"15:00", text:"Diamond Bridge (Gwangan Bridge)", type:"visit"},
+    {time:"16:00", text:"Seomyeon", type:"visit"},
+    {time:"19:00", text:"Cena: Jeonpo Cafe Street", type:"meal"},
+    {time:"21:00", text:"Riposo", type:"logistics"}
+  ],
+  places:[
+    {n:"Oryukdo Skywalk", d:"Passerella panoramica con pavimento in vetro a 35 metri sul mare, affacciata sulle isolette Oryukdo ('cinque-sei isole', il nome cambia con la marea).", tip:"Gratuita; portate i copri-scarpe che di solito vengono forniti sul posto."},
+    {n:"Igidae Coastal Trail", d:"Sentiero costiero tra rocce e pinete con viste sullo skyline di Haeundae e sul Gwangan Bridge, meno turistico rispetto ad altri punti di Busan.", tip:"Percorso di circa 5 km andata/ritorno: portate acqua e scarpe comode, poca ombra."},
+    {n:"Busan X the Sky", d:"Osservatorio agli ultimi piani della LCT Tower (411 m), tra i grattacieli residenziali più alti del mondo, con vista su Haeundae e sul mare.", tip:"Andateci verso il tramonto per vedere sia la luce del giorno sia le luci notturne della città."}
+  ]
+},
+{
+  id:9, region:"busan", date:"Dom 23 Agosto", city:"Busan", hotel:"Busan H-AVENUE Hotel Seomyeon",
+  schedule:[
+    {time:"04:00", text:"Sveglia 1", type:"logistics"},
+    {time:"05:00", text:"Tempio Haedong Yonggungsa (per chi vuole vederlo all'alba)", type:"visit"},
+    {time:"07:00", text:"Sveglia 2", type:"logistics"},
+    {time:"08:00", text:"Tempio Haedong Yonggungsa", type:"visit"},
+    {time:"09:30", text:"Cheongsapo Daritdol Skywalk", type:"visit"},
+    {time:"10:00", text:"Haeundae Blueline Park", type:"visit"},
+    {time:"11:30", text:"Spiaggia di Haeundae", type:"visit"},
+    {time:"17:00", text:"Busan X the Sky", type:"visit"},
+    {time:"19:00", text:"Cena: The Bay 101", type:"meal"}
+  ],
+  places:[
+    {n:"Haedong Yonggungsa", d:"Raro tempio buddista coreano costruito direttamente sulla scogliera davanti al mare, invece che tra le montagne. Molto scenografico all'alba, con meno folla.", tip:"Ci sono molti gradini in discesa e risalita: calcolate tempo e gambe per il ritorno."},
+    {n:"Haeundae Blueline Park", d:"Un percorso panoramico sulla ex linea ferroviaria costiera, percorribile a piedi, in trenino (Beach Train) o con le originali 'Sky Capsule' a due posti.", tip:"Le Sky Capsule vanno prenotate online con largo anticipo, si esauriscono in fretta."},
+    {n:"Spiaggia di Haeundae", d:"La spiaggia più famosa e affollata della Corea del Sud, cuore della vita balneare e notturna di Busan.", tip:"In agosto è piena: se cercate tranquillità, andateci presto al mattino."}
+  ]
+},
+{
+  id:10, region:"gj", date:"Lun 24 Agosto", city:"Gyeongju (day trip) → Seoul", hotel:"Dormy Inn Express Seoul Insadong",
+  note:"Giornata mista: mattina a Gyeongju, l'antica capitale del regno di Silla, poi treno serale per Seoul.",
+  schedule:[
+    {time:"06:30", text:"Sveglia + Check out", type:"logistics"},
+    {time:"07:30", text:"Partenza per Busan station [10min] → Partenza per Singyeongju Station [30 min] → Taxi per Tempio di Bulguksa [15/20min]", type:"transfer"},
+    {time:"08:00", text:"Lasciare le valigie in un locker in stazione", type:"logistics"},
+    {time:"09:00", text:"Tempio di Bulguksa", type:"visit"},
+    {time:"11:00", text:"Spostamento (~32 min)", type:"transfer"},
+    {time:"11:30", text:"Grotta di Seokguram", type:"visit"},
+    {time:"13:30", text:"Pranzo", type:"meal"},
+    {time:"15:00", text:"Spostamento (~32 min)", type:"transfer"},
+    {time:"15:30", text:"Daereungwon Tomb Complex", type:"visit"},
+    {time:"17:30", text:"Cheomseongdae (observatory)", type:"visit"},
+    {time:"19:30", text:"Donggung Palace e Wolji Pond", type:"visit"},
+    {time:"21:30", text:"Taxi per Singyeongju Station [10min] → Partenza per Singyeongju Station [30 min] → Taxi per Tempio di Bulguksa [15/20min]", type:"transfer"},
+    {time:"22:30", text:"Treno per Seoul 22:30", type:"transfer"}
+  ],
+  places:[
+    {n:"Tempio di Bulguksa", d:"Capolavoro dell'architettura buddista della dinastia Silla (VIII secolo), Patrimonio UNESCO insieme alla vicina Grotta di Seokguram. Ospita sei Tesori Nazionali coreani, tra cui le pagode Dabotap e Seokgatap.", tip:"Da qui parte il bus 12 per la Grotta di Seokguram, circa una volta all'ora."},
+    {n:"Grotta di Seokguram", d:"Santuario rupestre artificiale con una grande statua di Buddha in granito bianco, costruito nell'VIII secolo sul monte Tohamsan con vista sul mare.", tip:"Non si può fotografare l'interno della grotta: la statua è protetta da una vetrata."},
+    {n:"Daereungwon Tomb Complex", d:"Parco con oltre 20 tumuli funerari reali del regno di Silla, alcuni alti come colline erbose: un'immagine iconica di Gyeongju.", tip:"Si può camminare tra i tumuli anche al tramonto, molto suggestivo e meno caldo."},
+    {n:"Cheomseongdae", d:"Osservatorio astronomico in pietra del VII secolo, tra i più antichi dell'Asia orientale ancora esistenti.", tip:"È piccolo: bastano 15-20 minuti, ottimo per una sosta lungo il percorso verso i tumuli."}
+  ]
+},
+{
+  id:11, region:"seoul", date:"Mar 25 Agosto", city:"Seoul", hotel:"Dormy Inn Express / sera: Temple Stay Geumsunsa",
+  schedule:[
+    {time:"07:00", text:"Sveglia + Check out", type:"logistics"},
+    {time:"08:00", text:"Colazione: Artist Bakery", type:"meal"},
+    {time:"09:00", text:"Palazzo Gyeongbokgung", type:"visit"},
+    {time:"10:00", text:"(Cambio della guardia)", type:"visit"},
+    {time:"11:00", text:"Bukchon Village", type:"visit"},
+    {time:"12:00", text:"Insadong", type:"visit"},
+    {time:"13:00", text:"Pranzo: KOONG | Gaeseong Traditional Dumpling House", type:"meal"},
+    {time:"14:30", text:"Spostamento (~18 min)", type:"transfer"},
+    {time:"15:00", text:"Temple Stay (Geumsunsa)", type:"visit"}
+  ],
+  places:[
+    {n:"Palazzo Gyeongbokgung", d:"Il più grande e importante dei cinque palazzi reali di Seoul, sede principale della dinastia Joseon dal 1395. Il cambio della guardia si tiene più volte al giorno davanti al portale principale.", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Seoul%20Gyeongbokgung%20palace%20exterior%20view.jpg?width=600", tip:"Indossando un hanbok tradizionale (noleggiabile nelle vie vicine) l'ingresso al palazzo è gratuito."},
+    {n:"Bukchon Hanok Village", d:"Quartiere residenziale tra Gyeongbokgung e Changdeokgung con centinaia di hanok (case tradizionali coreane) ben conservate, oggi tra case private, caffè e piccoli musei.", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Bukchon%20Hanok%20Village%2001.jpg?width=600", tip:"È un quartiere abitato: si chiede ai visitatori di restare silenziosi, soprattutto nei vicoli più stretti."},
+    {n:"Insadong", d:"La via storica dell'artigianato, delle gallerie d'arte, delle case da tè e degli oggetti di antiquariato coreano.", tip:"Da non perdere la Ssamziegil, una piccola galleria commerciale a spirale con negozietti indipendenti."},
+    {n:"Temple Stay a Geumsunsa", d:"Un soggiorno di una notte in un tempio buddista attivo sulle colline a nord di Seoul: cena vegetariana, meditazione, canto e la sveglia con la campana del tempio.", tip:"Si dorme su futon a terra e si seguono orari e regole del tempio: informatevi in anticipo sul programma della serata."}
+  ]
+},
+{
+  id:12, region:"seoul", date:"Mer 26 Agosto", city:"Seoul", hotel:"Hanok: Gyedong Hanok 125",
+  schedule:[
+    {time:"04:00", text:"Temple Stay (Geumsunsa)", type:"visit"},
+    {time:"11:30", text:"Spostamento (~32 min)", type:"transfer"},
+    {time:"12:00", text:"Lasciare le valigie in Albergo", type:"logistics"},
+    {time:"12:30", text:"Pranzo: Gwangjang Market", type:"meal"},
+    {time:"14:00", text:"Changdeokgung Palace", type:"visit"},
+    {time:"15:00", text:"Changdeokgung secret garden (Da pretotare tour guidato del giardino)", type:"visit"},
+    {time:"16:00", text:"Changgyeonggung palace", type:"visit"},
+    {time:"17:00", text:"Spuntino: London Bagel Museum Anguk", type:"meal"},
+    {time:"17:30", text:"Check in Albergo", type:"logistics"},
+    {time:"18:30", text:"Namsan Mountain Park", type:"visit"},
+    {time:"19:30", text:"N Seoul Tower", type:"visit"}
+  ],
+  places:[
+    {n:"Gwangjang Market", d:"Uno dei mercati tradizionali più antichi di Seoul (dal 1905), famoso soprattutto per il bindaetteok (frittella di fagioli mung) e il mayak gimbap.", tip:"Molte bancarelle vogliono contanti o pagamento locale (app), tenete un po' di won con voi."},
+    {n:"Changdeokgung & Giardino Segreto", d:"Palazzo Patrimonio UNESCO, il meglio conservato tra quelli della dinastia Joseon. Il Huwon (Giardino Segreto) si visita solo con tour guidato a orari fissi.", tip:"Il tour del giardino ha posti limitati e va prenotato online in anticipo."},
+    {n:"Changgyeonggung Palace", d:"Palazzo più piccolo e meno affollato degli altri, originariamente residenza delle regine madri, con un bel giardino botanico ottocentesco.", tip:"Si può visitare con lo stesso biglietto cumulativo (Royal Palace Pass) degli altri quattro palazzi principali."},
+    {n:"N Seoul Tower", d:"Torre di comunicazioni del 1971 in cima al monte Namsan (236 m), simbolo della città, famosa anche per i 'lucchetti dell'amore' appesi alla terrazza panoramica.", img:"https://commons.wikimedia.org/wiki/Special:FilePath/Seoul%20at%20N%20Seoul%20Tower.jpg?width=600", tip:"Si sale a piedi da Myeongdong (30-40 min) oppure con la funivia Namsan Cable Car."}
+  ]
+},
+{
+  id:13, region:"seoul", date:"Gio 27 Agosto", city:"Seoul", hotel:"Orakai Insadong Suites",
+  schedule:[
+    {time:"07:30", text:"Sveglia + Check out", type:"logistics"},
+    {time:"08:30", text:"Tempio di Jongmyo", type:"visit"},
+    {time:"09:30", text:"Spuntino: Rain Report rainbow", type:"meal"},
+    {time:"10:00", text:"Dongdaemun Design Plaza (DDP)", type:"visit"},
+    {time:"12:00", text:"Pranzo: Pyongyang Myeonok", type:"meal"},
+    {time:"13:30", text:"Starfield Library", type:"visit"},
+    {time:"14:30", text:"Caffe: Four Stones Coffee Roasters Samseong", type:"meal"},
+    {time:"15:00", text:"Bongeunsa temple", type:"visit"},
+    {time:"16:00", text:"Seokchon Lake", type:"visit"},
+    {time:"18:30", text:"Namhansanseong West Gate Heliport", type:"visit"}
+  ],
+  places:[
+    {n:"Jongmyo Shrine", d:"Santuario confuciano dove sono conservate le tavolette commemorative dei re e delle regine della dinastia Joseon: il più antico santuario reale confuciano al mondo, Patrimonio UNESCO.", tip:"Nei giorni feriali la visita è spesso solo guidata a orari fissi: controllate il programma del giorno all'ingresso."},
+    {n:"Dongdaemun Design Plaza (DDP)", d:"Edificio futuristico dell'archistar Zaha Hadid, tra i simboli della Seoul contemporanea: mostre di design, moda e un grande mercato notturno di tessuti nei dintorni.", tip:"La facciata si illumina in modo scenografico dopo il tramonto: vale una seconda occhiata di sera."},
+    {n:"Starfield Library", d:"Biblioteca a due piani con scaffali alti 13 metri, dentro il centro commerciale COEX: uno degli angoli più fotografati di Seoul, aperta e gratuita.", tip:"È dentro un centro commerciale enorme (COEX): segnate dove siete entrati per ritrovare la strada."},
+    {n:"Bongeunsa Temple", d:"Tempio buddista attivo del IX secolo, in netto contrasto con i grattacieli di Gangnam che lo circondano.", tip:"È aperto al pubblico e gratuito; capita di poter assistere a cerimonie o canti dei monaci nel tardo pomeriggio."}
+  ]
+},
+{
+  id:14, region:"seoul", date:"Ven 28 Agosto", city:"Suwon (day trip) → Seoul", hotel:"Orakai Insadong Suites",
+  note:"Escursione di un giorno a Suwon, a circa 40 minuti da Seoul, per visitare una delle fortezze meglio conservate della Corea.",
+  schedule:[
+    {time:"06:30", text:"Sveglia", type:"logistics"},
+    {time:"07:30", text:"Partenza per Swon [40 min]", type:"transfer"},
+    {time:"09:00", text:"Paldalmun Gate", type:"visit"},
+    {time:"09:30", text:"Hwaseong Haenggung Palace", type:"visit"},
+    {time:"10:30", text:"Haenggung-dong Mural Village", type:"visit"},
+    {time:"11:30", text:"Jidong Mural Village", type:"visit"},
+    {time:"12:30", text:"Pranzo: Jidong Market", type:"meal"},
+    {time:"14:00", text:"Dongjangdae (Comando Est)", type:"visit"},
+    {time:"15:00", text:"Spuntino/caffè a Café Paletscent", type:"meal"},
+    {time:"15:30", text:"Janganmun (porta nord)", type:"visit"},
+    {time:"16:30", text:"Fortezza di Hwaseong", type:"visit"},
+    {time:"18:00", text:"Porta Hwaseomun", type:"visit"},
+    {time:"19:00", text:"Seojangdae", type:"visit"},
+    {time:"20:30", text:"Cena: Suwon Chicken Street", type:"meal"},
+    {time:"22:00", text:"Rientro a Seoul [40 min]", type:"transfer"}
+  ],
+  places:[
+    {n:"Fortezza di Hwaseong", d:"Cinta muraria del XVIII secolo lunga circa 5,7 km, costruita dal re Jeongjo, Patrimonio UNESCO e capolavoro dell'ingegneria militare coreana dell'epoca.", tip:"Si può camminare sull'intero perimetro (2-3 ore) o prendere il trenino turistico per i tratti più lunghi."},
+    {n:"Hwaseong Haenggung Palace", d:"Il più grande palazzo temporaneo reale della Corea, usato dal re Jeongjo durante le visite a Suwon; qui si tengono spesso spettacoli e cerimonie in costume.", tip:"Controllate online l'orario dello spettacolo del cambio della guardia del giorno della visita."},
+    {n:"Mural Villages (Haenggung-dong / Jidong)", d:"Quartieri collinari con vicoli decorati da murales colorati e street art, meno turistici delle omologhe zone di Seoul.", tip:"Buona luce fotografica nel tardo pomeriggio; attenzione a non disturbare i residenti nei vicoli stretti."}
+  ]
+},
+{
+  id:15, region:"seoul", date:"Sab 29 Agosto", city:"Seoul", hotel:"Orakai Insadong Suites",
+  schedule:[
+    {time:"04:00", text:"Sveglia", type:"logistics"},
+    {time:"05:00", text:"Inwangsan Peak", type:"visit"},
+    {time:"08:00", text:"Jogyesa Temple", type:"visit"},
+    {time:"09:30", text:"Namdaemun Market", type:"visit"},
+    {time:"10:30", text:"Myeongdong", type:"visit"},
+    {time:"12:30", text:"Pranzo", type:"meal"},
+    {time:"14:30", text:"Ihwa Mural Village", type:"visit"},
+    {time:"15:30", text:"Free time o in alternativa Seul: laboratorio di Insa per la creazione di bacchette tradizionali", type:"visit"},
+    {time:"20:30", text:"Cena", type:"meal"}
+  ],
+  places:[
+    {n:"Inwangsan Peak", d:"Collina rocciosa a nord-ovest del centro, meno battuta dei percorsi turistici classici, con viste su Seoul e sul palazzo Gyeongbokgung dall'alto; sulle sue pendici si trova anche un santuario sciamanico attivo.", tip:"Il sentiero verso la cima è ripido in alcuni tratti: scarpe comode, soprattutto se ci si va per l'alba con poca luce."},
+    {n:"Jogyesa Temple", d:"Tempio principale dell'ordine Jogye, la più grande scuola di buddismo coreano, nel cuore della città: piccolo ma vivace, con un grande albero secolare nel cortile.", tip:"Capita spesso di vedere le funzioni mattutine dei monaci: si può assistere restando in silenzio sul retro."},
+    {n:"Myeongdong", d:"Il quartiere dello shopping e della cosmetica coreana per eccellenza, con il più alto concentrato di street food della città la sera.", tip:"I prezzi nei negozi di cosmetici sono spesso trattabili o con sconti extra se si chiede."},
+    {n:"Ihwa Mural Village", d:"Quartiere collinare alle spalle di Dongdaemun, trasformato in museo a cielo aperto con murales, tra cui i celebri girasoli e le ali dipinte sulle scalinate.", tip:"È un quartiere abitato con scalinate ripide: evitate rumori e non entrate nei cortili privati per la foto."}
+  ]
+},
+{
+  id:16, region:"seoul", date:"Dom 30 Agosto", city:"Seoul → Napoli", hotel:"—",
+  flight:"Volo Seoul → Napoli",
+  note:"Ultimo giorno: check-out, trasferimento a Incheon (circa 1h da Seoul con AREX o taxi) e volo di rientro. Nel file non sono indicati orari puntuali per questa giornata.",
+  schedule:[
+
+  ],
+  places:[
+    
+  ]
+}
+
+];
+
+const INFO = {
+  intro:"Non avrete una guida in loco, quindi questa pagina raccoglie il minimo indispensabile da sapere prima di partire per Hong Kong e la Corea del Sud: documenti, soldi, connessione, trasporti e qualche norma di comportamento utile per non fare brutte figure (o perdersi).",
+  cards:[
+    {icon:"🛂", title:"Documenti & ingresso", items:[
+      "<b>Hong Kong:</b> nessun visto per soggiorni turistici brevi con passaporto italiano (fino a 90 giorni). Basta il passaporto in corso di validità.",
+      "<b>Corea del Sud:</b> l'obbligo di K-ETA (autorizzazione elettronica di viaggio) per i cittadini italiani è sospeso fino al 31 dicembre 2026: si entra senza richiederlo.",
+      "Dal 1° gennaio 2026 è comunque obbligatoria la compilazione della <b>e-Arrival Card</b> coreana (online, prima dell'arrivo) per chi non ha un K-ETA valido — verificate la procedura più aggiornata vicino alla partenza sul sito del governo coreano.",
+      "Passaporto con validità residua di almeno 6 mesi consigliata per entrambe le tappe.",
+    ]},
+    {icon:"💳", title:"Soldi e pagamenti", items:[
+      "<b>Hong Kong:</b> dollaro di Hong Kong (HKD). Carte contactless accettate quasi ovunque; utile la Octopus card per bus, metro, traghetti e piccoli acquisti.",
+      "<b>Corea:</b> won coreano (KRW). Il contante resta utile nei mercati e nelle bancarelle di street food; altrove le carte funzionano molto bene.",
+      "Prelevare con una carta senza commissioni estere (Revolut, Wise, N26...) conviene quasi sempre rispetto al cambio in agenzia.",
+    ]},
+    {icon:"📱", title:"Connessione & app essenziali", items:[
+      "eSIM o SIM fisica acquistabile online in anticipo (es. Airalo, Klook) o in aeroporto all'arrivo in entrambe le tappe.",
+      "<b>In Corea, Google Maps non funziona bene</b> per indicazioni a piedi/auto/mezzi: scaricate <b>Naver Map</b> o <b>KakaoMap</b>.",
+      "<b>Papago</b> (traduttore di Naver) è più affidabile di Google Translate per il coreano, anche via foto.",
+      "<b>KakaoTalk</b> è l'app di messaggistica standard in Corea; <b>Kakao T</b> per chiamare i taxi.",
+      "A Hong Kong Google Maps funziona regolarmente senza problemi.",
+    ]},
+    {icon:"🚇", title:"Trasporti", items:[
+      "<b>Hong Kong:</b> Octopus card ricaricabile per MTR, bus, tram e Star Ferry — si acquista in ogni stazione.",
+      "<b>Corea:</b> T-money card ricaricabile per bus e metro in tutte le città (venduta in convenience store come GS25 o CU).",
+      "A Jeju è quasi indispensabile l'auto (già prevista nel programma); a Seoul, Busan e Hong Kong i mezzi pubblici coprono tutto molto bene.",
+      "I taxi in Corea sono economici rispetto agli standard italiani; utile avere l'indirizzo scritto in coreano (Papago aiuta) da mostrare all'autista.",
+    ]},
+    {icon:"🔌", title:"Elettricità", items:[
+      "<b>Hong Kong:</b> presa tipo G (come nel Regno Unito, tre poli rettangolari) — serve un adattatore.",
+      "<b>Corea del Sud:</b> prese tipo C/F, compatibili con le nostre spine europee standard (in genere non serve adattatore).",
+      "Portate comunque un adattatore universale: semplifica la vita passando da un paese all'altro.",
+    ]},
+    {icon:"🙏", title:"Usi & galateo", items:[
+      "Nei templi coreani e negli hanok ci si toglie le scarpe prima di entrare; abbigliamento sobrio nei luoghi di culto.",
+      "In Corea è comune un leggero inchino come saluto/ringraziamento; si passano e ricevono oggetti e denaro con due mani, specialmente verso persone più anziane.",
+      "Il volume della voce in luoghi pubblici (metro, ristoranti) tende ad essere più basso che in Italia.",
+      "A Hong Kong l'inglese è ampiamente parlato (era colonia britannica fino al 1997); in Corea, fuori dalle zone turistiche, l'inglese è meno diffuso: qualche frase base in coreano è molto apprezzata.",
+    ]},
+    {icon:"🍜", title:"Cibo", items:[
+      "In Corea quasi ogni pasto è accompagnato da banchan (contorni gratuiti, tra cui il kimchi) serviti automaticamente.",
+      "Molti ristoranti coreani sono specializzati in un solo piatto: leggete l'insegna prima di entrare se cercate qualcosa di specifico.",
+      "Per allergie o intolleranze, tenete a portata una frase scritta in coreano (Papago) da mostrare al personale: la cucina di strada spesso non ha menù tradotti.",
+    ]},
+    {icon:"🌦️", title:"Meteo di fine agosto", items:[
+      "Sia Hong Kong sia la Corea del Sud sono calde e molto umide in agosto (30°C+ con afa); portate abiti leggeri e traspiranti.",
+      "È ancora stagione di piogge estive/tifoni: un k-way o un piccolo ombrello pieghevole nello zaino tornano utili quasi ogni giorno.",
+      "Jeju e Busan, essendo costiere, risentono maggiormente di eventuali perturbazioni tropicali: controllate le previsioni un paio di giorni prima.",
+    ]},
+    {icon:"🆘", title:"Numeri utili", items:[
+      "<b>Corea del Sud:</b> 112 polizia, 119 ambulanza/vigili del fuoco (anche in inglese).",
+      "<b>Hong Kong:</b> 999 per tutte le emergenze.",
+      "Ambasciata d'Italia a Seoul e Consolato Generale a Hong Kong: salvate contatti e indirizzo prima di partire.",
+    ]},
+  ]
+};
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const navContent = document.getElementById('navContent');
+const page = document.getElementById('page');
+
+function regionDays(key){ return DAYS.filter(d=>d.region===key); }
+
+function buildSidebar(){
+  let html = `<div class="navgroup">
+    <button class="infolink" data-target="info" id="navInfo">🧭 &nbsp;Prima di partire</button>
+  </div>
+  <div class="navgroup"><div class="navgroup-label">Itinerario giorno per giorno</div>`;
+
+  Object.keys(REGIONS).forEach(key=>{
+    if(key==="info") return;
+    const r = REGIONS[key];
+    const days = regionDays(key);
+    if(!days.length) return;
+    html += `<div class="region-block">
+      <div class="region-head"><span class="dot" style="background:${r.color}"></span>${r.label}</div>`;
+    days.forEach(d=>{
+      html += `<button class="daylink" data-target="day-${d.id}" data-region="${key}" style="--accent:${r.color}">
+        <span class="num">${String(d.id).padStart(2,'0')}</span> ${d.date.split(' ').slice(0,2).join(' ')}
+      </button>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  navContent.innerHTML = html;
+
+  navContent.querySelectorAll('.daylink').forEach(btn=>{
+    btn.addEventListener('click', ()=> showDay(parseInt(btn.dataset.target.replace('day-',''))));
+  });
+  document.getElementById('navInfo').addEventListener('click', showInfo);
+}
+
+function setActiveNav(target){
+  document.querySelectorAll('.daylink, .infolink').forEach(el=>el.classList.remove('active'));
+  const el = document.querySelector(`[data-target="${target}"]`);
+  if(el) el.classList.add('active');
+}
+
+function placeCardHTML(p, accent){
+  const media = p.img
+    ? `<img class="place-img" src="${p.img}" alt="${p.n}" loading="lazy">`
+    : `<div class="place-img-ph" style="--accent:${accent}">${p.n}</div>`;
+  return `<div class="place-card">
+    ${media}
+    <div class="place-body">
+      <h4>${p.n}</h4>
+      <p>${p.d}</p>
+      <div class="tip"><b>💡</b><span>${p.tip}</span></div>
+    </div>
+  </div>`;
+}
+
+function showDay(id){
+  const d = DAYS.find(x=>x.id===id);
+  if(!d) return;
+  const r = REGIONS[d.region];
+  const idx = DAYS.findIndex(x=>x.id===id);
+  const prev = DAYS[idx-1];
+  const next = DAYS[idx+1];
+
+  let extraMeta = '';
+  if(d.flight) extraMeta += `<span><b>✈ ${d.flight}</b></span>`;
+
+  page.innerHTML = `
+    <div class="ticket" style="--accent:${r.color}">
+      <div class="ticket-row">
+        <div>
+          <div class="ticket-eyebrow">Giorno ${String(d.id).padStart(2,'0')} / 16 · ${r.label}</div>
+          <h2>${d.city}</h2>
+          <div class="sub">${d.date}</div>
+        </div>
+        <div class="ticket-meta">
+          <div><b>Hotel</b></div>
+          <div>${d.hotel}</div>
+        </div>
+      </div>
+      <div class="perf">
+        ${extraMeta}
+        ${d.note ? `<span>${d.note}</span>` : ''}
+      </div>
+    </div>
+
+    ${d.schedule && d.schedule.length ? `
+    <div class="block-title">Programma orario</div>
+    <div class="legend" style="--accent:${r.color}">
+      <span><i></i>Tappa/visita</span>
+      <span><i class="meal-i"></i>Pasto</span>
+      <span><i class="transfer-i"></i>Spostamento / partenza</span>
+      <span><i class="logistics-i"></i>Sveglia · check-in/out · bagagli</span>
+    </div>
+    <div class="timeline" style="--accent:${r.color}">
+      ${d.schedule.map(s=>`<div class="tl-item ${s.type}" style="--accent:${r.color}">
+        <div class="tl-time">${s.time}</div>
+        <div class="tl-text">${s.text}</div>
+      </div>`).join('')}
+    </div>` : d.note ? '' : `
+    <div class="block-title">Programma orario</div>
+    <p style="color:#7a7263;font-size:14px;">Nessun orario dettagliato disponibile per questa giornata nel file originale.</p>
+    `}
+
+    ${d.places && d.places.length ? `
+    <div class="block-title">Cosa vedrete — info utili</div>
+    <div class="places">
+      ${d.places.map(p=>placeCardHTML(p, r.color)).join('')}
+    </div>` : ''}
+
+    <div class="foot-nav">
+      <button class="foot-btn" ${prev? '' : 'disabled'} id="prevBtn">
+        <span class="lbl">← Giorno precedente</span>
+        <span class="nm">${prev ? prev.city + ' — ' + prev.date : ''}</span>
+      </button>
+      <button class="foot-btn right" ${next? '' : 'disabled'} id="nextBtn">
+        <span class="lbl">Giorno successivo →</span>
+        <span class="nm">${next ? next.city + ' — ' + next.date : ''}</span>
+      </button>
+    </div>
+  `;
+  setActiveNav(`day-${id}`);
+  window.scrollTo({top:0, behavior:'instant'});
+  if(prev) document.getElementById('prevBtn').addEventListener('click', ()=>showDay(prev.id));
+  if(next) document.getElementById('nextBtn').addEventListener('click', ()=>showDay(next.id));
+  closeMobileNav();
+}
+
+function showInfo(){
+  page.innerHTML = `
+    <div class="info-hero">
+      <div class="ticket-eyebrow">🧭 Guida rapida</div>
+      <h2>Prima di partire</h2>
+      <p>${INFO.intro}</p>
+    </div>
+    <div class="info-grid">
+      ${INFO.cards.map(c=>`
+        <div class="info-card">
+          <h3>${c.icon} ${c.title}</h3>
+          <ul>${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  setActiveNav('info');
+  window.scrollTo({top:0, behavior:'instant'});
+  closeMobileNav();
+}
+
+/* mobile nav toggle */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+overlay.addEventListener('click', ()=>{
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+});
+function closeMobileNav(){
+  if(window.innerWidth<=900){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+}
+
+/* init */
+buildSidebar();
+showInfo();
+</script>
+</body>
+</html>
